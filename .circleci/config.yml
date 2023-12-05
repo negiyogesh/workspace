@@ -11,17 +11,24 @@ jobs:
       - run:
           name: Fetch Dependencies from S3
           command: |
-            mkdir -p ./dir
-            aws s3 cp s3://circleci-yogi/Screenshot from 2023-12-04 19-32-27.png ./dir/
-            ls -R
+            mkdir -p ./downloaded-files
+            aws s3 cp s3://circleci-yogi/Screenshot from 2023-12-04 19-32-27.png ./downloaded-files/
+            ls -R ./downloaded-files
   build:
     docker:
       - image: cimg/openjdk:8.0.362-node
     steps:
       - checkout
       - attach_workspace:
-          at: ./dir
+          at: ./downloaded-files
       - run:
           name: Debug Directory Structure
           command: |
-            ls -R
+            ls -R ./downloaded-files
+
+workflows:
+  version: 2
+  download_and_build:
+    jobs:
+      - fetch-dependencies
+      - build          
