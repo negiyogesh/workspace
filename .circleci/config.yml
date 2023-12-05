@@ -1,19 +1,23 @@
 version: 2.1
+
 jobs:
-  fetch-dependencies:
+  download-from-s3:
     docker:
       - image: circleci/python:3.8
     steps:
       - checkout
       - run:
           name: Install AWS CLI
-          command: pip install awscli
+          command: |
+            sudo apt-get update && sudo apt-get install -y python3-pip
+            pip3 install awscli
       - run:
-          name: Fetch Dependencies from S3
+          name: Download File from S3
           command: |
             mkdir -p ./downloaded-files
-            aws s3 cp s3://circleci-yogi/Screenshot.png ./downloaded-files/
+            aws s3 cp s3://circleci-yogi/view ./downloaded-files/
             ls -R ./downloaded-files
+
   build:
     docker:
       - image: cimg/openjdk:8.0.362-node
@@ -22,13 +26,13 @@ jobs:
       - attach_workspace:
           at: ./downloaded-files
       - run:
-          name: Debug Directory Structure
+          name: Use Downloaded File
           command: |
-            ls -R ./downloaded-files
+            cat ./downloaded-files/view  # Use the downloaded file in your build
 
 workflows:
   version: 2
   download_and_build:
     jobs:
-      - fetch-dependencies
-      - build          
+      - download-from-s3
+      - build
