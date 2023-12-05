@@ -1,0 +1,27 @@
+version: 2.1
+jobs:
+  fetch-dependencies:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Install AWS CLI
+          command: pip install awscli
+      - run:
+          name: Fetch Dependencies from S3
+          command: |
+            mkdir -p ./aws
+            aws s3 cp s3://circleci-yogi/Screenshot from 2023-12-04 19-32-27.png ./aws/
+            ls -R
+  build:
+    docker:
+      - image: cimg/openjdk:8.0.362-node
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./aws
+      - run:
+          name: Debug Directory Structure
+          command: |
+            ls -R
