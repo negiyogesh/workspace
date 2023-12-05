@@ -11,8 +11,8 @@ jobs:
       - run:
           name: Fetch Dependencies from S3
           command: |
-            mkdir -p ./aws
-            aws s3 cp s3://circleci-yogi/Screenshot from 2023-12-04 19-32-27.png ./aws/
+            mkdir -p ./dir
+            aws s3 cp s3://circleci-yogi/Screenshot from 2023-12-04 19-32-27.png ./dir/
             ls -R
   build:
     docker:
@@ -20,7 +20,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ./aws
+          at: ./dir
       - run:
           name: Debug Directory Structure
           command: |
