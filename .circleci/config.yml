@@ -12,7 +12,7 @@ jobs:
           name: Fetch Dependencies from S3
           command: |
             mkdir -p ./downloaded-files
-            aws s3 cp s3://circleci-yogi/Screenshot from 2023-12-04 19-32-27.png ./downloaded-files/
+            aws s3 cp s3://circleci-yogi/Screenshot.png ./downloaded-files/
             ls -R ./downloaded-files
   build:
     docker:
